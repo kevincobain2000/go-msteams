@@ -35,7 +35,12 @@ type fact struct {
 }
 
 func Send(title, subtitle, subject, color, message, hookURL, proxyURL string) (err error) {
-	card := msTeamCard{
+	card := getCard(title, subtitle, subject, color, message)
+	return card.dispatch(hookURL, proxyURL)
+}
+
+func getCard(title, subtitle, subject, color, message string) msTeamCard {
+	return msTeamCard{
 		Type:       "MessageCard",
 		Context:    "http://schema.org/extensions",
 		Summary:    subject,
@@ -55,7 +60,6 @@ func Send(title, subtitle, subject, color, message, hookURL, proxyURL string) (e
 			},
 		},
 	}
-	return card.dispatch(hookURL, proxyURL)
 }
 
 // dispatch is send message to webhook
