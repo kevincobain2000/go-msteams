@@ -36,11 +36,19 @@ go-msteams -hook=<required ms-teams webhook> -title= -subtitle= -subject= -messa
 
 ```go
 import (
-    gmt "github.com/kevincobain2000/go-msteams"
+    gmt "github.com/kevincobain2000/go-msteams/src"
 )
 
 func main() {
-    err := gmt.Send(title, subtitle, subject, color, message, hook, proxy string)
+    title := "" //optional
+    subtitle := "" //optional
+    subject := "Required" //optional
+    color := "" //optional
+    message := "" //optional
+    hook := "https://required" //required
+    proxy := "" //optional
+
+    err := gmt.Send(title, subtitle, subject, color, message, hook, proxy)
 	if err != nil {
 		log.Println(err)
 	} else {
@@ -49,7 +57,9 @@ func main() {
 }
 ```
 
-### Command line params:
+--
+
+### Command Line Params Help:
 
 ```sh
 go-msteams -h
