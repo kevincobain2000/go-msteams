@@ -22,6 +22,15 @@
 
 ## Installation
 
+Install binary
+
+```sh
+curl -sLk https://raw.githubusercontent.com/kevincobain2000/go-msteams/master/install.sh | sh
+./go-msteams --help
+```
+
+Or using Go
+
 ```sh
 go install github.com/kevincobain2000/go-msteams@latest
 ```
