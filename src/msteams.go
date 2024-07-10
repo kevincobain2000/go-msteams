@@ -10,28 +10,32 @@ import (
 	"time"
 )
 
-// msTeamCard is MessageCard for Team notification
+// msTeamCard is Adaptive Card for Team notification
 type msTeamCard struct {
-	Type       string    `json:"@type"`
-	Context    string    `json:"@context"`
-	Summary    string    `json:"summary"`
-	ThemeColor string    `json:"theme_color"`
-	Title      string    `json:"title"`
-	Sections   []section `json:"sections"`
+	Type    string    `json:"type"`
+	Version string    `json:"version"`
+	Body    []body    `json:"body"`
+	Actions []action  `json:"actions"`
 }
 
-// section is sub-struct of msTeamCard
-type section struct {
-	ActivityTitle    string `json:"activityTitle"`
-	ActivitySubtitle string `json:"activitySubtitle"`
-	ActivityImage    string `json:"activityImage"`
-	Facts            []fact `json:"facts"`
+// body is sub-struct of msTeamCard
+type body struct {
+	Type     string   `json:"type"`
+	Text     string   `json:"text"`
+	Items    []item   `json:"items"`
 }
 
-// fact is sub-struct of section
-type fact struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
+// item is sub-struct of body
+type item struct {
+	Type  string `json:"type"`
+	Text  string `json:"text"`
+}
+
+// action is sub-struct of msTeamCard
+type action struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
 }
 
 func Send(title, subtitle, subject, color, message, hookURL, proxyURL string) (err error) {
@@ -41,22 +45,31 @@ func Send(title, subtitle, subject, color, message, hookURL, proxyURL string) (e
 
 func getCard(title, subtitle, subject, color, message string) msTeamCard {
 	return msTeamCard{
-		Type:       "MessageCard",
-		Context:    "http://schema.org/extensions",
-		Summary:    subject,
-		ThemeColor: color,
-		Title:      title,
-		Sections: []section{
+		Type:    "AdaptiveCard",
+		Version: "1.2",
+		Body: []body{
 			{
-				ActivityTitle:    subject,
-				ActivitySubtitle: subtitle,
-				ActivityImage:    "",
-				Facts: []fact{
-					{
-						Name:  "Message",
-						Value: message,
-					},
-				},
+				Type: "TextBlock",
+				Text: title,
+			},
+			{
+				Type: "TextBlock",
+				Text: subtitle,
+			},
+			{
+				Type: "TextBlock",
+				Text: subject,
+			},
+			{
+				Type: "TextBlock",
+				Text: message,
+			},
+		},
+		Actions: []action{
+			{
+				Type:  "Action.OpenUrl",
+				Title: "Learn More",
+				URL:   "https://adaptivecards.io",
 			},
 		},
 	}

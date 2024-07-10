@@ -28,4 +28,36 @@ func TestCard(t *testing.T) {
 	message := "My Message"
 	card := getCard(title, subtitle, subject, color, message)
 	assert.NotNil(t, card)
+
+	expectedCard := msTeamCard{
+		Type:    "AdaptiveCard",
+		Version: "1.2",
+		Body: []body{
+			{
+				Type: "TextBlock",
+				Text: title,
+			},
+			{
+				Type: "TextBlock",
+				Text: subtitle,
+			},
+			{
+				Type: "TextBlock",
+				Text: subject,
+			},
+			{
+				Type: "TextBlock",
+				Text: message,
+			},
+		},
+		Actions: []action{
+			{
+				Type:  "Action.OpenUrl",
+				Title: "Learn More",
+				URL:   "https://adaptivecards.io",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedCard, card)
 }
