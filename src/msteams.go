@@ -3,8 +3,8 @@ package src
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
+	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -12,64 +12,114 @@ import (
 
 // msTeamCard is Adaptive Card for Team notification
 type msTeamCard struct {
-	Type    string    `json:"type"`
-	Version string    `json:"version"`
-	Body    []body    `json:"body"`
-	Actions []action  `json:"actions"`
+	Type        string       `json:"type"`
+	Attachments []attachment `json:"attachments"`
 }
 
-// body is sub-struct of msTeamCard
-type body struct {
-	Type     string   `json:"type"`
-	Text     string   `json:"text"`
-	Items    []item   `json:"items"`
+type attachment struct {
+	ContentType string      `json:"contentType"`
+	ContentURL  *string     `json:"contentUrl"`
+	Content     cardContent `json:"content"`
 }
 
-// item is sub-struct of body
-type item struct {
+type cardContent struct {
+	Schema      string        `json:"$schema"`
+	Type        string        `json:"type"`
+	Version     string        `json:"version"`
+	AccentColor string        `json:"accentColor"`
+	Body        []interface{} `json:"body"`
+	Actions     []action      `json:"actions"`
+	MSTeams     msTeams       `json:"msteams"`
+}
+
+type textBlock struct {
+	Type   string `json:"type"`
+	Text   string `json:"text"`
+	ID     string `json:"id,omitempty"`
+	Size   string `json:"size,omitempty"`
+	Weight string `json:"weight,omitempty"`
+	Color  string `json:"color,omitempty"`
+}
+
+type fact struct {
+	Title string `json:"title"`
+	Value string `json:"value"`
+}
+
+type factSet struct {
 	Type  string `json:"type"`
-	Text  string `json:"text"`
+	Facts []fact `json:"facts"`
+	ID    string `json:"id"`
 }
 
-// action is sub-struct of msTeamCard
+type codeBlock struct {
+	Type        string `json:"type"`
+	CodeSnippet string `json:"codeSnippet"`
+	FontType    string `json:"fontType"`
+	Wrap        bool   `json:"wrap"`
+}
+
 type action struct {
 	Type  string `json:"type"`
 	Title string `json:"title"`
 	URL   string `json:"url"`
 }
 
-func Send(title, subtitle, subject, color, message, hookURL, proxyURL string) (err error) {
-	card := getCard(title, subtitle, subject, color, message)
+type msTeams struct {
+	Width string `json:"width"`
+}
+
+func Send(title, subtitle, subject, message, hookURL, proxyURL string) (err error) {
+	card := getCard(title, subtitle, subject, message)
 	return card.dispatch(hookURL, proxyURL)
 }
 
-func getCard(title, subtitle, subject, color, message string) msTeamCard {
+func getCard(title, subtitle, subject, message string) msTeamCard {
 	return msTeamCard{
-		Type:    "AdaptiveCard",
-		Version: "1.2",
-		Body: []body{
+		Type: "message",
+		Attachments: []attachment{
 			{
-				Type: "TextBlock",
-				Text: title,
-			},
-			{
-				Type: "TextBlock",
-				Text: subtitle,
-			},
-			{
-				Type: "TextBlock",
-				Text: subject,
-			},
-			{
-				Type: "TextBlock",
-				Text: message,
-			},
-		},
-		Actions: []action{
-			{
-				Type:  "Action.OpenUrl",
-				Title: "Learn More",
-				URL:   "https://adaptivecards.io",
+				ContentType: "application/vnd.microsoft.card.adaptive",
+				ContentURL:  nil,
+				Content: cardContent{
+					Schema:      "http://adaptivecards.io/schemas/adaptive-card.json",
+					Type:        "AdaptiveCard",
+					Version:     "1.4",
+					AccentColor: "bf0000",
+					Body: []interface{}{
+						textBlock{
+							Type:   "TextBlock",
+							Text:   title,
+							ID:     "title",
+							Size:   "large",
+							Weight: "bolder",
+							Color:  "accent",
+						},
+						factSet{
+							Type: "FactSet",
+							Facts: []fact{
+								{
+									Title: "Subtitle:",
+									Value: subtitle,
+								},
+								{
+									Title: "Subject:",
+									Value: subject,
+								},
+							},
+							ID: "acFactSet",
+						},
+						codeBlock{
+							Type:        "CodeBlock",
+							CodeSnippet: message,
+							FontType:    "monospace",
+							Wrap:        true,
+						},
+					},
+					MSTeams: msTeams{
+						Width: "Full",
+					},
+				},
 			},
 		},
 	}
@@ -113,14 +163,12 @@ func (card *msTeamCard) dispatch(hookURL, proxyURL string) (err error) {
 	}
 
 	defer resp.Body.Close()
+	log.Println("response", resp.Status)
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
-	body := string(respBody)
-	if body != "1" {
-		return fmt.Errorf("error: %v", body)
-	}
+
 	return nil
 }
