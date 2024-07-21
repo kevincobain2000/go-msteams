@@ -28,7 +28,7 @@ func main() {
 	log.Println("hook:", *hook)
 	log.Println("proxy:", *proxy)
 
-	err := Send(*title, *subtitle, *subject, *color, *message, *hook, *proxy)
+	err := Send(*title, *subtitle, *subject, *message, *hook, *proxy)
 
 	log.Println()
 	if err != nil {
@@ -38,6 +38,6 @@ func main() {
 	}
 }
 
-func Send(title, subtitle, subject, color, message, hook, proxy string) (err error) {
+func Send(title, subtitle, subject, message, hook, proxy string) (err error) {
 	return src.Send(title, subtitle, subject, message, hook, proxy)
 }
