@@ -14,10 +14,9 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - name: Setup go
-        uses: actions/setup-go@v2
+      - uses: kevincobain2000/action-gobrew@v2
         with:
-          go-version: ${{ matrix.go }}
+          version: ${{ matrix.go-version }}
 
       - name: Static Check
         uses: dominikh/staticcheck-action@v1.2.0

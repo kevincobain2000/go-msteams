@@ -12,7 +12,7 @@ var (
 	title    = flag.String("title", "My Title", "Description: Your title")
 	subtitle = flag.String("subtitle", "My Summary", "Description: Your summary")
 	subject  = flag.String("subject", "My Subject", "Description: Your subject")
-	color    = flag.String("color", "", "Description: Your theme color")
+	color    = flag.String("color", "", "Description: Your theme color") // unimplemented
 	message  = flag.String("message", "My Message", "Description: Message body. HTML allowed.")
 	proxy    = flag.String("proxy", "", "Description: Hit behind this proxy")
 )
@@ -39,5 +39,5 @@ func main() {
 }
 
 func Send(title, subtitle, subject, color, message, hook, proxy string) (err error) {
-	return src.Send(title, subtitle, subject, color, message, hook, proxy)
+	return src.Send(title, subtitle, subject, message, hook, proxy)
 }
