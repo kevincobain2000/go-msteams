@@ -106,14 +106,12 @@ func getCard(title, subtitle, subject, message string) msTeamCard {
 									Title: "Subject:",
 									Value: subject,
 								},
+								{
+									Title: "Message:",
+									Value: message,
+								},
 							},
 							ID: "acFactSet",
-						},
-						codeBlock{
-							Type:        "CodeBlock",
-							CodeSnippet: message,
-							FontType:    "monospace",
-							Wrap:        true,
 						},
 					},
 					MSTeams: msTeams{
