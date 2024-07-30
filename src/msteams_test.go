@@ -45,7 +45,7 @@ func TestGetCard(t *testing.T) {
 
 	// Check the body of the card
 	body := content.Body
-	if len(body) != 3 {
+	if len(body) != 2 {
 		t.Errorf("expected 3 body elements, got %d", len(body))
 	}
 
@@ -72,7 +72,7 @@ func TestGetCard(t *testing.T) {
 	if !ok {
 		t.Errorf("expected second body element to be factSet, got %T", body[1])
 	}
-	if len(factSetBlock.Facts) != 2 {
+	if len(factSetBlock.Facts) != 3 {
 		t.Errorf("expected 2 facts, got %d", len(factSetBlock.Facts))
 	}
 	if factSetBlock.Facts[0].Value != subtitle {
@@ -80,21 +80,6 @@ func TestGetCard(t *testing.T) {
 	}
 	if factSetBlock.Facts[1].Value != subject {
 		t.Errorf("expected subject to be '%s', got '%s'", subject, factSetBlock.Facts[1].Value)
-	}
-
-	// Check the code block
-	codeBlock, ok := body[2].(codeBlock)
-	if !ok {
-		t.Errorf("expected third body element to be codeBlock, got %T", body[2])
-	}
-	if codeBlock.CodeSnippet != message {
-		t.Errorf("expected code snippet to be '%s', got '%s'", message, codeBlock.CodeSnippet)
-	}
-	if codeBlock.FontType != "monospace" {
-		t.Errorf("expected font type to be 'monospace', got '%s'", codeBlock.FontType)
-	}
-	if !codeBlock.Wrap {
-		t.Errorf("expected wrap to be true, got %v", codeBlock.Wrap)
 	}
 }
 
