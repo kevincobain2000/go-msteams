@@ -49,19 +49,23 @@ import (
 )
 
 func main() {
-    title := "" //optional
-    subtitle := "" //optional
-    subject := "Required" //optional
-    color := "" //optional
-    message := "" //optional
     hook := "https://required" //required
     proxy := "" //optional
 
-    details := map[string]string{
-        "Subtitle Name": subtitle,
-        "Subject Name":  subject,
-        "Message Name":  message,
-    }
+	details := []gmt.Details{
+		{
+			Label:   "Subtitle",
+			Message: "subtitle",
+		},
+		{
+			Label:   "Subject",
+			Message: "subject",
+		},
+		{
+			Label:   "Message",
+			Message: "message",
+		},
+	}
 
     err := gmt.Send(title, details, hook, proxy)
     if err != nil {

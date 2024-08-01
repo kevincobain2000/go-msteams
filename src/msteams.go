@@ -52,13 +52,6 @@ type factSet struct {
 	ID    string `json:"id"`
 }
 
-type codeBlock struct {
-	Type        string `json:"type"`
-	CodeSnippet string `json:"codeSnippet"`
-	FontType    string `json:"fontType"`
-	Wrap        bool   `json:"wrap"`
-}
-
 type action struct {
 	Type  string `json:"type"`
 	Title string `json:"title"`
@@ -69,17 +62,22 @@ type msTeams struct {
 	Width string `json:"width"`
 }
 
-func Send(title string, details map[string]string, hookURL, proxyURL string) (err error) {
+type Details struct {
+	Label   string `json:"label"`
+	Message string `json:"value"`
+}
+
+func Send(title string, details []Details, hookURL, proxyURL string) (err error) {
 	card := getCard(title, details)
 	return card.dispatch(hookURL, proxyURL)
 }
 
-func getCard(title string, details map[string]string) msTeamCard {
+func getCard(title string, details []Details) msTeamCard {
 	facts := []fact{}
-	for k, v := range details {
+	for _, v := range details {
 		facts = append(facts, fact{
-			Title: k + ":",
-			Value: v,
+			Title: v.Label,
+			Value: v.Message,
 		})
 	}
 

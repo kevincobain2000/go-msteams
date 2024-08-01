@@ -13,10 +13,19 @@ func TestGetCard(t *testing.T) {
 	subtitle := "Test Subtitle"
 	subject := "Test Subject"
 	message := "Test Message"
-	details := map[string]string{
-		"Subtitle": subtitle,
-		"Subject":  subject,
-		"Message":  message,
+	details := []Details{
+		{
+			Label:   "Subtitle",
+			Message: subtitle,
+		},
+		{
+			Label:   "Subject",
+			Message: subject,
+		},
+		{
+			Label:   "Message",
+			Message: message,
+		},
 	}
 
 	card := getCard(title, details)
@@ -97,10 +106,19 @@ func TestDispatch(t *testing.T) {
 	subtitle := "Test Subtitle"
 	subject := "Test Subject"
 	message := "Test Message"
-	details := map[string]string{
-		"Subtitle": subtitle,
-		"Subject":  subject,
-		"Message":  message,
+	details := []Details{
+		{
+			Label:   "Subtitle",
+			Message: subtitle,
+		},
+		{
+			Label:   "Subject",
+			Message: subject,
+		},
+		{
+			Label:   "Message",
+			Message: message,
+		},
 	}
 
 	card := getCard(title, details)

@@ -39,10 +39,19 @@ func main() {
 }
 
 func Send(title, subtitle, subject, message, hook, proxy string) (err error) {
-	details := map[string]string{
-		"Subtitle": subtitle,
-		"Subject":  subject,
-		"Message":  message,
+	details := []src.Details{
+		{
+			Label:   "Subtitle",
+			Message: subtitle,
+		},
+		{
+			Label:   "Subject",
+			Message: subject,
+		},
+		{
+			Label:   "Message",
+			Message: message,
+		},
 	}
 	return src.Send(title, details, hook, proxy)
 }
