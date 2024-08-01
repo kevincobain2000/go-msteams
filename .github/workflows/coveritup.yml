@@ -60,7 +60,7 @@ jobs:
           type: go-mod-dependencies
           command: go list -m all|wc -l|awk '{$1=$1};1'
       - name: Lint
-        run: golangci-lint run ./..
+        run: golangci-lint run ./...
 
       - name: PR Comment
         uses: kevincobain2000/action-coveritup@v2
