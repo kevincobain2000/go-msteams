@@ -13,8 +13,13 @@ func TestGetCard(t *testing.T) {
 	subtitle := "Test Subtitle"
 	subject := "Test Subject"
 	message := "Test Message"
+	details := map[string]string{
+		"Subtitle": subtitle,
+		"Subject":  subject,
+		"Message":  message,
+	}
 
-	card := getCard(title, subtitle, subject, message)
+	card := getCard(title, details)
 
 	// Check the top-level fields
 	if card.Type != "message" {
@@ -92,8 +97,13 @@ func TestDispatch(t *testing.T) {
 	subtitle := "Test Subtitle"
 	subject := "Test Subject"
 	message := "Test Message"
+	details := map[string]string{
+		"Subtitle": subtitle,
+		"Subject":  subject,
+		"Message":  message,
+	}
 
-	card := getCard(title, subtitle, subject, message)
+	card := getCard(title, details)
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {

@@ -69,12 +69,20 @@ type msTeams struct {
 	Width string `json:"width"`
 }
 
-func Send(title, subtitle, subject, message, hookURL, proxyURL string) (err error) {
-	card := getCard(title, subtitle, subject, message)
+func Send(title string, details map[string]string, hookURL, proxyURL string) (err error) {
+	card := getCard(title, details)
 	return card.dispatch(hookURL, proxyURL)
 }
 
-func getCard(title, subtitle, subject, message string) msTeamCard {
+func getCard(title string, details map[string]string) msTeamCard {
+	facts := []fact{}
+	for k, v := range details {
+		facts = append(facts, fact{
+			Title: k + ":",
+			Value: v,
+		})
+	}
+
 	return msTeamCard{
 		Type: "message",
 		Attachments: []attachment{
@@ -96,22 +104,9 @@ func getCard(title, subtitle, subject, message string) msTeamCard {
 							Color:  "accent",
 						},
 						factSet{
-							Type: "FactSet",
-							Facts: []fact{
-								{
-									Title: "Subtitle:",
-									Value: subtitle,
-								},
-								{
-									Title: "Subject:",
-									Value: subject,
-								},
-								{
-									Title: "Message:",
-									Value: message,
-								},
-							},
-							ID: "acFactSet",
+							Type:  "FactSet",
+							Facts: facts,
+							ID:    "acFactSet",
 						},
 					},
 					MSTeams: msTeams{
