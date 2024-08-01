@@ -45,7 +45,7 @@ jobs:
         uses: kevincobain2000/action-coveritup@v2
         with:
           type: build-time
-          command: go build
+          command: go build -o main
           record: runtime
 
       - name: Go Binary Size
