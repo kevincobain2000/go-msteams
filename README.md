@@ -57,18 +57,18 @@ func main() {
     hook := "https://required" //required
     proxy := "" //optional
 
-	details := map[string]string{
-		"Subtitle Name": subtitle,
-		"Subject Name":  subject,
-		"Message Name":  message,
-	}
+    details := map[string]string{
+        "Subtitle Name": subtitle,
+        "Subject Name":  subject,
+        "Message Name":  message,
+    }
 
     err := gmt.Send(title, details, hook, proxy)
-	if err != nil {
-		log.Println(err)
-	} else {
-		log.Println("Successfully sent!")
-	}
+    if err != nil {
+        log.Println(err)
+    } else {
+        log.Println("Successfully sent!")
+    }
 }
 ```
 
