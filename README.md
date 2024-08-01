@@ -5,7 +5,7 @@
   <br>
   Go module to send messages to MS Teams channel
   <br>
-  using webhooks.
+  using Microsoft Teams Workflows.
 </p>
 
 <p align="center">
