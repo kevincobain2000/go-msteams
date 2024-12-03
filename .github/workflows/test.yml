@@ -1,0 +1,32 @@
+on: [push, pull_request]
+
+name: "Test"
+jobs:
+  coveritup:
+    strategy:
+      matrix:
+        go-version: [latest]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: kevincobain2000/action-gobrew@v2
+        with:
+          version: ${{ matrix.go-version }}
+
+      - name: Install Tools
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+
+      - run: go mod tidy
+      - run: go build -o main
+      - run: go test -race -v ./... -count=1
+
+
+      - name: Coverage Totalizer
+        uses: kevincobain2000/action-coveritup@v2
+        with:
+           command: ./cover-totalizer coverage.xml
+           type: coverage
+      - name: Lint
+        run: golangci-lint run ./...
