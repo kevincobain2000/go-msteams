@@ -21,12 +21,5 @@ jobs:
       - run: go mod tidy
       - run: go build -o main
       - run: go test -race -v ./... -count=1
-
-
-      - name: Coverage Totalizer
-        uses: kevincobain2000/action-coveritup@v2
-        with:
-           command: ./cover-totalizer coverage.xml
-           type: coverage
       - name: Lint
         run: golangci-lint run ./...
